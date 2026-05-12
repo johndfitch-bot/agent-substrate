@@ -1,0 +1,98 @@
+{
+    "_redaction_notice": "scrubbed by CC for public substrate, 2026-05-12. REAL LOAD (dry_run=false). Policy: structural only (counts, breakdown buckets, anomaly metadata, merge_results counts kept verbatim). Tracking IDs in duplicates_removed + anomalies replaced with [REDACTED-DUP-NNN] / [REDACTED-ANOMALY-NNN] markers preserving array position only. fresenius_client_id replaced with [REDACTED-CLIENT-FRESENIUS] sentinel. Source: utopia/dist/load_reports/fresenius_overrides_2026-05-12_151746.json. Source repo: johndfitch-bot/utopia (PRIVATE - McKesson IP boundary).",
+    "stamp": "2026-05-12_151746",
+    "host": "[REDACTED-HOSTNAME]",
+    "user": "[REDACTED-USER]",
+    "dry_run": false,
+    "sql_server": "<sql-server-internal>",
+    "sql_database": "UTOPIA",
+    "site_code": "MEM",
+    "client_name_like": "%resenius%",
+    "list_label": "list 2026-05-12",
+    "input_file": "<utopia-root>/dist/imports/fresenius_returns_2026-05-12.txt",
+    "raw_line_count": 297,
+    "after_trim_empty_drop": 295,
+    "after_dedupe": 293,
+    "duplicates_removed": [
+        "[REDACTED-DUP-001]",
+        "[REDACTED-DUP-002]"
+    ],
+    "carrier_breakdown": {
+        "ups": 260,
+        "usps": 8,
+        "fedex": 18,
+        "unknown": 7
+    },
+    "anomalies": [
+        {
+            "raw": "[REDACTED-ANOMALY-001]",
+            "length": 17,
+            "carrier": "unknown",
+            "issues": [
+                "no_carrier_match"
+            ]
+        },
+        {
+            "raw": "[REDACTED-ANOMALY-002]",
+            "length": 18,
+            "carrier": "unknown",
+            "issues": [
+                "no_carrier_match"
+            ]
+        },
+        {
+            "raw": "[REDACTED-ANOMALY-003]",
+            "length": 17,
+            "carrier": "unknown",
+            "issues": [
+                "no_carrier_match"
+            ]
+        },
+        {
+            "raw": "[REDACTED-ANOMALY-004]",
+            "length": 17,
+            "carrier": "unknown",
+            "issues": [
+                "no_carrier_match"
+            ]
+        },
+        {
+            "raw": "[REDACTED-ANOMALY-005]",
+            "length": 20,
+            "carrier": "unknown",
+            "issues": [
+                "no_carrier_match"
+            ]
+        },
+        {
+            "raw": "[REDACTED-ANOMALY-006]",
+            "length": 19,
+            "carrier": "unknown",
+            "issues": [
+                "no_carrier_match"
+            ]
+        },
+        {
+            "raw": "[REDACTED-ANOMALY-007]",
+            "length": 19,
+            "carrier": "unknown",
+            "issues": [
+                "no_carrier_match"
+            ]
+        }
+    ],
+    "fresenius_client_id_resolved": "[REDACTED-CLIENT-FRESENIUS]",
+    "fresenius_client_name_resolved": "[REDACTED]",
+    "merge_results": {
+        "rows_inserted": 293,
+        "rows_reactivated": 0,
+        "rows_already_active_same_client": 0,
+        "rows_flagged_different_client": 0,
+        "flagged_rows": []
+    },
+    "pre_count_mem_active": 0,
+    "post_count_mem_active": 293,
+    "seconds_wall": 4.54,
+    "status": "OK",
+    "errors": []
+}
