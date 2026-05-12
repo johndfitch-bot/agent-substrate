@@ -2,15 +2,18 @@
 ==============================================================================
   REDACTION NOTICE  (scrubbed by CC for public substrate, 2026-05-12)
 ==============================================================================
-Source        : utopia/dist/big_run_reports/big_run_2026-05-12_100931/REPORT.txt
+Source        : utopia/dist/big_run_reports/big_run_2026-05-12_113553/REPORT.txt
 Source repo   : johndfitch-bot/utopia (PRIVATE - McKesson IP boundary)
-Run context   : April 2026 close-out audit, etl_run_id=20. Driven by the
-                new scripts/run_memphis_trueup_april.bat which forces a
-                fresh dispense pull (max_reuse_age_minutes=0) over the
-                Apr 1 - Apr 30 ship window. Hypothesis: the March cache
-                (run 12, reused for run 19) didn't cover April production
-                dates, causing the 59.5% UPS unmatched rate. Confirmation
-                of fix: see META.md alongside this file.
+Run context   : etl_run_id=21. INTENDED to be the extended-dispense variant
+                of the April close-out (dispense pull window widened to
+                2026-03-01 -> 2026-05-06). The runner's META.json reveals
+                that ALL THREE -bat overrides were silently dropped: the
+                run executed with the .ps1's DEFAULT values, identical
+                to run 20. Caret line-continuation bug in the .bat. See
+                META.md for the diagnosis + fix commit.
+                Net effect: run 21 is a functional duplicate of run 20.
+                A real extended-dispense run still needs to happen after
+                Fitch pulls the fix.
 Scrub policy  : strip hostnames, usernames, filesystem paths, internal IPs,
                 SQL user names, SQL Server version banners, client names,
                 tracking numbers, order numbers, dollar amounts, and any
@@ -23,12 +26,12 @@ Kept (structural only) : section headers, migration filenames, smoke-check
 ==============================================================================
   00  ENVIRONMENT
 ==============================================================================
-stamp        : 2026-05-12_100931
+stamp        : 2026-05-12_113553
 host         : [REDACTED-HOSTNAME] ([REDACTED-USER])
 utopia root  : <utopia-root>
 trueup root  : <trueup-root>
 sql target   : <sql-server-internal> / UTOPIA (SQL user [REDACTED])
-ship window  : <period>
+ship window  : <period>   (* NOTE: April-only, NOT the Mar 1 - Apr 30 intended)
 sqlcmd       : <sqlcmd>
 python       : <python>
 
@@ -43,8 +46,6 @@ probe          : OK
   01  MIGRATIONS
 ==============================================================================
 SKIPPED via -SkipMigrations.
-  (april_runner pre-flight confirmed sp_etl_ups_pre_to_post present;
-   no DDL re-run needed)
 
 ==============================================================================
   02  SMOKE CHECKS
@@ -52,20 +53,16 @@ SKIPPED via -SkipMigrations.
 TABLE : 9 found (expected 9)
 VIEW  : 2 found (expected 2)
 PROC  : 15 found (expected 16)
-  (same 15/16 gap as run 19; smoke check's name/schema filter doesn't
-   catch sp_etl_ups_pre_to_post even though the step log proves it ran)
 
 ==============================================================================
   03  CSV LOAD
 ==============================================================================
 SKIPPED via -SkipCsvLoad.
-  (UPS landing has 221,410 rows from yesterday's loader, all April invoices;
-   EP + FedEx landings confirmed April-dated by april_runner pre-flight)
 
 ==============================================================================
   04  AUDIT RUN
 ==============================================================================
-etl_run_id   : 20
+etl_run_id   : 21
 status       : COMPLETE
 total lines  : 50678
 closed       : 40185
@@ -96,8 +93,8 @@ client_id|client_name|tracking_number|order_number|ship_method|shipping_carrier|
 ==============================================================================
   05  RUN STATUS
 ==============================================================================
-=== etl_run_id 20 step log ===
-  [COMPLETE]  refresh_dispense_cache            rows=284816  FRESH PULL (451s): 284816 rows; 138848 unique trackings.
+=== etl_run_id 21 step log ===
+  [COMPLETE]  refresh_dispense_cache            rows=284816  FRESH PULL (378s): 284816 rows; 138848 unique trackings.
   [COMPLETE]  purge_audit_detail                rows=     0  audit_detail wiped: 0; normalized wiped: 0
   [COMPLETE]  normalize_easypost                rows=     2  2 EasyPost lines normalized
   [COMPLETE]  normalize_fedex                   rows=     3  3 FedEx lines normalized
@@ -111,7 +108,7 @@ client_id|client_name|tracking_number|order_number|ship_method|shipping_carrier|
   [COMPLETE]  match_05_ups_returns              rows=    71  71 UPS return-reference matches closed
   [COMPLETE]  match_06_fedex_refs               rows=     1  1 FedEx prefix-matches closed (v2: prefix + ship_method=FEDEX)
 
-=== run 20: counts by carrier + match_type ===
+=== run 21: counts by carrier + match_type ===
   EasyPost   DIRECT CARRIER SHIPMENT ID MATCH                  lines=    2  $=[REDACTED]
   FedEx      (UNMATCHED)                                       lines=    2  $=[REDACTED]
   FedEx      FEDEX CUSTOMER REFERENCE PREFIX MATCH (FEDEX-only)  lines=    1  $=[REDACTED]
@@ -137,13 +134,13 @@ invoice_summary.csv            5 rows
 ==============================================================================
   SUMMARY
 ==============================================================================
-started        : 05/12/2026 10:09:31
-ended          : 05/12/2026 10:18:14
-duration       : 523 s
+started        : 05/12/2026 11:35:53
+ended          : 05/12/2026 11:43:17
+duration       : 444 s
 warnings       : 1
 errors         : 0
 
-Run folder: <utopia-root>/logs/big_run_2026-05-12_100931
+Run folder: <utopia-root>/logs/big_run_2026-05-12_113553
 Send the entire run folder back for review.
 
 --- WARNINGS ---

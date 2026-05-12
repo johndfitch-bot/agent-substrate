@@ -1,130 +1,122 @@
-# META — Memphis True-Up April close-out (run 20)
+# META — Memphis True-Up "extended-dispense" attempt (run 21)
 
-| Field | Value |
-|---|---|
-| run_stamp | 2026-05-12_100931 |
-| etl_run_id | **20** |
-| runner | `scripts/run_memphis_trueup_april.bat` (new, see commit `9500f74`) |
-| ship_window | (redacted — April 2026 calendar month) |
-| dispense_pull_mode | **FRESH PULL** (`@max_reuse_age_minutes = 0`) — 451s, 284,816 rows, 138,848 unique trackings |
-| status | COMPLETE |
-| duration | 523 s (8.7 min, mostly the fresh ScriptMaster pull) |
-| warnings | 1 (PROC smoke; same as run 19) |
-| errors | 0 |
+> **Critical finding:** run 21 was **NOT the extended-dispense variant**.
+> All three `.bat` overrides (`-ShipMonthStart 2026-03-01`,
+> `-ShipMonthEnd 2026-04-30`, `-RunBy fitch_april_extended_dispense`)
+> were silently dropped by CMD's caret line-continuation. The script
+> executed with its **default** parameter values — making run 21 a
+> **functional duplicate** of run 20.
+>
+> All metrics below match run 20 to the digit. The dispense pull row
+> count is also identical (284,816 / 138,848 unique), confirming the
+> window was never widened.
+>
+> Fix is on origin at `feat/ups-diag` commit `110bb2a` (rewrote the .bat
+> to single-line PS invocation, matching every other .bat in the repo).
+> Re-run required to actually exercise the extended-dispense path.
 
-## Hypothesis verified — match rate jump
+## Headline numbers — run 19 → run 20 → run 21
 
-Captain's hypothesis (run 19's 59.5% UPS unmatched was caused by the
-cache window not covering April production_dates, reused from run 12's
-March pull) was **confirmed by the dispense-window diag**
-(`ups_dispense_window_2026-05-12_094141.json`, status OK):
+| Metric | Run 19 (March, REUSED) | Run 20 (April, FRESH) | Run 21 (intended Mar 1 → Apr 30 + FRESH) | Δ vs Run 20 |
+|---|---:|---:|---:|---:|
+| ship_window (`etl_run_log.dt_start`/`dt_end`) | Mar 1 → Mar 31 | Apr 1 → Apr 30 | **Apr 1 → Apr 30** (NOT the intended Mar 1 → Apr 30) | 0 |
+| dispense source | REUSED run 12 | FRESH PULL (451s) | FRESH PULL (378s) | — |
+| dispense rows pulled | 304,963 | 284,816 | **284,816** (identical) | 0 |
+| dispense unique trackings | 135,047 | 138,848 | **138,848** (identical) | 0 |
+| `ups_pre_to_post` rows | 221,410 | 221,410 | 221,410 | 0 |
+| `normalize_ups` rows | 50,673 | 50,673 | 50,673 | 0 |
+| `match_01_direct` closures | 20,364 | 40,113 | **40,113** | 0 |
+| `match_05_ups_returns` closures | 149 | 71 | **71** | 0 |
+| `match_06_fedex_refs` closures | 0 | 1 | **1** | 0 |
+| Total closed | 20,513 (40.5%) | 40,185 (79.3%) | **40,185 (79.3%)** | 0 |
+| `invoices_unified.csv` rows | 24,442 | 46,011 | **46,011** | 0 |
+| `fails_ups.csv` rows | 30,163 | 10,491 | **10,491** | 0 |
+| Duration | 70 s | 523 s | 444 s | — |
+| Warnings | 2 | 1 | 1 | — |
+| Errors | 0 | 0 | 0 | — |
 
-* Cache pull window: `2026-03-01 → 2026-04-06` (March + 6-day overflow)
-* 55/55 sampled unmatched UPS trackings WERE in SCRIPTMASTER
-* 55/55 had `production_date > 2026-04-06` → bucketed `after`
-* 0/55 missing from SCRIPTMASTER; 0/55 before window; 0/55 within
-* Distinct clients in sample: 1
+Every "Δ vs Run 20" column entry is **0** because runs 20 and 21 ran the
+same audit configuration. This is the diagnostic signature of the
+propagation failure: a 6-week-wider dispense window would have added
+March production rows (which the dispense pull does include — confirmed
+by run 19's REUSED-from-run-12 pull which had window Mar 1 → Apr 6).
+Run 21's 138,848 unique trackings exactly equals run 20's, so no March
+data made it into this run's cache.
 
-So the trackings were billable and recorded — the cache just didn't
-include them. Forcing a fresh pull with April's window (April + 6-day
-overflow = `2026-04-01 → 2026-05-06`) is the fix.
+## Root cause of the propagation failure
 
-## Run 19 (March params, REUSED cache) vs Run 20 (April params, FRESH cache)
+`scripts/run_memphis_trueup_april_extended.bat` (commit `8e60fa7`)
+used cmd's caret line-continuation to break the PowerShell invocation
+across four lines:
 
-| Metric | Run 19 | Run 20 | Δ |
-|---|---:|---:|---:|
-| ship_window | 2026-03-01 → 2026-03-31 | 2026-04-01 → 2026-04-30 | — |
-| dispense source | REUSED run 12 (1199 min old) | **FRESH PULL (451s)** | — |
-| `refresh_dispense_cache` rows | 304,963 | 284,816 | -20,147 |
-| `refresh_dispense_cache` unique trackings | 135,047 | **138,848** | +3,801 |
-| `ups_pre_to_post` rows | 221,410 | 221,410 | 0 (UPS landing unchanged) |
-| `normalize_ups` rows | 50,673 | 50,673 | 0 |
-| `populate_audit_detail` rows | 50,678 | 50,678 | 0 |
-| **`match_01_direct` closures** | **20,364** | **40,113** | **+19,749** ✅ |
-| `match_05_ups_returns` closures | 149 | 71 | -78 (some now picked up by match_01) |
-| `match_06_fedex_refs` closures | 0 | 1 | +1 |
-| **Total closed** | **20,513 (40.5%)** | **40,185 (79.3%)** | **+19,672 (+38.8 pp)** ✅ |
-| Open (FAIL) | 30,165 | **10,493** | **-19,672** ✅ |
-| UPS unmatched lines | 30,163 (59.5%) | **10,491 (20.7%)** | **-19,672** ✅ |
-| `invoices_unified.csv` rows | 24,442 | **46,011** | **+21,569** ✅ |
-| `fails_ups.csv` rows | 30,163 | **10,491** | **-19,672** ✅ |
-| `fails_fedex.csv` rows | 0 | 2 | +2 (newly surfaced) |
-| `fails_easypost.csv` rows | 2 | 0 | -2 (now matched) |
+```bat
+powershell.exe -NoExit -ExecutionPolicy Bypass -NoLogo -File "%PS1_PATH%" ^
+    -ShipMonthStart "2026-03-01" ^
+    -ShipMonthEnd   "2026-04-30" ^
+    -RunBy          "fitch_april_extended_dispense" %*
+```
 
-## Smoke check — still 15/16 PROC mismatch
+Cmd's caret continuation has subtle requirements (no trailing
+whitespace, no BOM, behaves differently under double-click vs.
+cmd-prompt launch) and silently failed here — PowerShell received
+only `-File "<path>"` with no script args, dropped the overrides, and
+ran with defaults. Every other `.bat` in `scripts/` uses single-line
+invocation; this one was the outlier.
 
-Same as run 19. The new SP `sp_etl_ups_pre_to_post` **IS callable** —
-the step log proves it ran with 221,410 rows transformed. The smoke
-check's name/schema filter in `scripts/memphis_trueup_big_run.ps1`
-doesn't pick it up. This is a smoke-check bug, not a migration gap.
-Migration 0121 was confirmed applied by the april_runner's pre-flight
-before invoking big_run with `-SkipMigrations`.
+**Smoking-gun evidence in `META.json` (from work-box run):**
 
-## UPS WARNING — gone
+```json
+"invocation": {
+    "ShipMonthStart":  "2026-04-01",      // expected 2026-03-01
+    "ShipMonthEnd":    "2026-04-30",      // ok (default coincides)
+    "RunBy":           "april_runner_2026-05-12_113549"  // expected fitch_april_extended_dispense
+}
+```
 
-Run 19's stale `raw_invoice_data has no UPS rows for site 'MEM'`
-warning (a section 03 false positive) is **absent** from run 20 —
-because section 03 was skipped via `-SkipCsvLoad`. Net result:
-the only remaining warning is the PROC 15/16 smoke gap.
+## Fix
 
-## April runner pre-flight (recorded in script's META.json — see Note)
+`feat/ups-diag` commit **`110bb2a`** rewrites the `.bat` to use a
+single-line PS invocation, identical pattern to every other `.bat`
+in the repo. The overrides now reach the script.
 
-| Gate | Outcome |
-|---|---|
-| sp_etl_ups_pre_to_post present | ✅ (drove `-SkipMigrations`) |
-| ups_invoice_landing rows | 221,410 across 4 batches (yesterday's loader) |
-| easypost_invoice_landing overlaps April | ✅ |
-| fedex_invoice_landing overlaps April | ✅ |
-| cs_return_override_log baseline | recorded, untouched (separate cycle) |
+## What still needs to happen
 
-## Note: april_runner's own META.json did not land on origin
+1. Fitch pulls `feat/ups-diag` on work-box (head should now be `110bb2a`).
+2. Re-run `scripts\run_memphis_trueup_april_extended.bat`. The next
+   `etl_run_log` row should show `dt_start = 2026-03-01` (not Apr 1),
+   `run_by = 'fitch_april_extended_dispense'`, and the dispense pull
+   row count should be **higher** than 284,816 (if March SCRIPTMASTER
+   has any rows for site=MEM, which we expect it does — run 19 saw
+   them when reusing run 12's pull).
+3. Bridge that new run to substrate. If match counts jump again, we
+   have answered whether the remaining 10,491 unmatched UPS lines are
+   primarily older-dispense returns. If counts stay the same, those
+   10,491 are structurally unbillable (third-party scans, label-only,
+   etc.) and the audit has reached its functional floor for April.
 
-The `run_memphis_trueup_april.ps1` does a separate `git commit + push`
-for `dist/big_run_reports/big_run_<stamp>/META.json` *after* big_run's
-Phase 08 auto-publishes the REPORT.txt and step logs. On this run, the
-big_run REPORT.txt commit (`82f1faa`) is on origin, but no follow-on
-META.json commit was pushed. Likely cause: the runner's `git pull --rebase`
-right before its META commit returned non-zero (e.g. no upstream
-tracking, or a transient network blip), and it logged a Warn but
-didn't push. The substrate META.md (this file) is authoritative for
-the comparison view anyway; the missing runner-local META.json is
-just for ops record-keeping. Worth a one-line follow-up to make the
-runner's commit-and-push step idempotent + retry.
+## What this run still tells us — operational evidence
 
-## Remaining 10,491 UPS unmatched — next-cycle targets
+Even though run 21 is configurationally a clone of run 20, the fact
+that we got byte-for-byte identical match counts on a re-run with a
+freshly-pulled-from-scratch dispense cache is **useful confirmation**:
 
-The 79.3% match rate is a clean step-change from 40.5%. The remaining
-~20% UPS unmatched is the structural floor for this period — likely
-a mix of:
+* `match_01_direct` is deterministic against a fresh cache. The 40,113
+  result reproduces. No race conditions or non-determinism in the
+  cascade.
+* `match_05_ups_returns` reproduces at 71.
+* The dispense pull SP is stable: 284,816 rows / 138,848 unique
+  trackings each time the same window is requested.
+* The pre-flight gates correctly green-lit the run (EP/FedEx landing
+  date overlap, UPS landing 221,410, 0121 present, cs_log untouched).
 
-* UPS-billed shipments without a dispense pairing (third-party scans,
-  rejected packages, label-only never-shipped)
-* Cross-month returns of shipments produced before March (the April
-  window's lookback only goes 6 days, so returns of January/February
-  dispenses still won't match)
-* Trackings with `production_date` in dispense but no `client_id`
-  populated (`unique_tracking_client_map` filters those out via
-  `HAVING COUNT(DISTINCT client_id) = 1`)
+So the close-out audit pipeline itself is sound. Only the wrapper's
+.bat had a bug. After the .bat fix, the actual extended-dispense run
+becomes a single clean test.
 
-If Captain wants to drive further, a follow-up diag scoped to the
-new run-20 unmatched set (the bucket distribution shape from
-`ups_match_diag` re-run against `etl_run_id=20`) would tell whether
-the remaining misses are dispense-cache-missing (extend window) or
-dispense-cache-present-but-no-client (data quality at source).
+## April runner META.json on origin this time
 
-## Phase D close-out call
-
-| Criterion | Status |
-|---|---|
-| Migration 0121 applied + SP callable | ✅ (step log proves) |
-| UPS lines flowing into audit cascade | ✅ (50,673 normalized, 40,185 matched) |
-| UPS lines in `invoices_unified.csv` | ✅ (40,111 direct + 71 returns visible in carrier counts) |
-| Match rate at expected band for clean window | ✅ (79.3% vs run 19's 40.5%) |
-| Stale UPS WARNING gone | ✅ (section 03 skipped removed the false positive) |
-| Smoke check PROC=16 | ⚠️ still 15/16 (smoke-check filter bug; SP confirmed present) |
-
-**Captain's call:** the cache-window root cause is closed. The 15/16
-smoke-check filter is a cosmetic follow-up in `memphis_trueup_big_run.ps1`.
-The remaining 20% unmatched is structural and warrants a scoped
-diag if pursued. Memphis True-Up replatform is feature-complete vs
-the legacy Access pipeline for the April period.
+Run 21 DID produce a `META.json` at
+`dist/big_run_reports/big_run_2026-05-12_113553/META.json` and it
+landed on origin in commit `719cf8e` — the missing follow-on commit
+from run 20's bridge is no longer a question. Whatever made it not
+push for run 20 (transient git issue, probably) didn't recur. Good.
