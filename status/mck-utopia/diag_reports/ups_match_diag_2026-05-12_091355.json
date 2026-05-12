@@ -1,0 +1,435 @@
+{
+    "_redaction_notice": "scrubbed by CC for public substrate, 2026-05-12. Policy: structural only (counts, buckets, run metadata, error strings kept verbatim from source). Tracking IDs in raw_sample.id replaced with [REDACTED-NNN] markers preserving array position only. Host/user/sql_server top-level fields also redacted. Source: utopia/dist/diag_reports/ups_match_diag_2026-05-12_091355.json. Source repo: johndfitch-bot/utopia (PRIVATE - McKesson IP boundary).",
+    "stamp": "2026-05-12_091355",
+    "host": "[REDACTED-HOSTNAME]",
+    "user": "[REDACTED-USER]",
+    "sql_server": "<sql-server-internal>",
+    "sql_database": "UTOPIA",
+    "sample_size_requested": 100,
+    "etl_run_id": 19,
+    "dispense_cache_for_run_id": 304963,
+    "cs_log": {
+        "error": "Cannot convert value \"NULL\" to type \"System.Int32\". Error: \"Input string was not in a correct format.\""
+    },
+    "ambiguity_sample": {
+        "sample_size": 100,
+        "buckets": {
+            "zero_clients": 100,
+            "one_client": 0,
+            "two_plus_clients": 0
+        },
+        "raw_sample": [
+            {
+                "id": "[REDACTED-001]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-002]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-003]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-004]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-005]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-006]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-007]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-008]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-009]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-010]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-011]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-012]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-013]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-014]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-015]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-016]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-017]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-018]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-019]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-020]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-021]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-022]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-023]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-024]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-025]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-026]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-027]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-028]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-029]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-030]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-031]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-032]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-033]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-034]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-035]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-036]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-037]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-038]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-039]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-040]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-041]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-042]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-043]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-044]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-045]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-046]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-047]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-048]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-049]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-050]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-051]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-052]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-053]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-054]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-055]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-056]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-057]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-058]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-059]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-060]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-061]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-062]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-063]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-064]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-065]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-066]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-067]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-068]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-069]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-070]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-071]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-072]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-073]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-074]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-075]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-076]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-077]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-078]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-079]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-080]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-081]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-082]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-083]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-084]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-085]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-086]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-087]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-088]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-089]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-090]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-091]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-092]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-093]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-094]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-095]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-096]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-097]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-098]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-099]",
+                "client_count": 0
+            },
+            {
+                "id": "[REDACTED-100]",
+                "client_count": 0
+            }
+        ],
+        "error": null
+    },
+    "map_state": {
+        "map_total": 135047,
+        "ups_audit": 50673,
+        "ups_unmatched": 30163
+    },
+    "seconds_wall": 4.13,
+    "status": "PARTIAL",
+    "errors": [
+        "Q1_cs_log: Cannot convert value \"NULL\" to type \"System.Int32\". Error: \"Input string was not in a correct format.\""
+    ]
+}
