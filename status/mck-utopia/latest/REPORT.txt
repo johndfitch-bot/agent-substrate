@@ -2,8 +2,8 @@
 ==============================================================================
   REDACTION NOTICE  (scrubbed by CC for public substrate, 2026-05-12)
 ==============================================================================
-Source        : utopia/dist/big_run_reports/big_run_2026-05-11_162659/REPORT.txt
-Source repo   : johndfitch-bot/utopia (PRIVATE — McKesson IP boundary)
+Source        : utopia/dist/big_run_reports/big_run_2026-05-12_080758/REPORT.txt
+Source repo   : johndfitch-bot/utopia (PRIVATE - McKesson IP boundary)
 Scrub policy  : strip hostnames, usernames, filesystem paths, internal IPs,
                 SQL user names, SQL Server version banners, client names,
                 tracking numbers, order numbers, dollar amounts, and any
@@ -16,7 +16,7 @@ Kept (structural only) : section headers, migration filenames, smoke-check
 ==============================================================================
   00  ENVIRONMENT
 ==============================================================================
-stamp        : 2026-05-11_162659
+stamp        : 2026-05-12_080758
 host         : [REDACTED-HOSTNAME] ([REDACTED-USER])
 utopia root  : <utopia-root>
 trueup root  : <trueup-root>
@@ -29,7 +29,7 @@ python       : <python>
   00.5  CONNECTION PROBE
 ==============================================================================
 probe          : OK
-  (server_name / version / login_as columns redacted — SQL Server version
+  (server_name / version / login_as columns redacted - SQL Server version
   banner + service account name)
 
 ==============================================================================
@@ -52,13 +52,14 @@ probe          : OK
 0118_rename_pallet_to_zone.sql  : OK
 0119_memphis_trueup_import_folders.sql  : OK
 0120_memphis_trueup_ups_import_folder.sql  : OK
+0121_memphis_trueup_ups_pre_to_post.sql  : OK
 
 ==============================================================================
   02  SMOKE CHECKS
 ==============================================================================
 TABLE : 9 found (expected 9)
 VIEW  : 2 found (expected 2)
-PROC  : 15 found (expected 15)
+PROC  : 15 found (expected 16)
 
 ==============================================================================
   03  CSV LOAD
@@ -66,15 +67,17 @@ PROC  : 15 found (expected 15)
 EasyPost CSV : easypost-shipments-<period>.csv  loaded
 FedEx CSV    : fed-ex-<period>.CSV  loaded
 UPS rows in raw_invoice_data (site=MEM) : 0
+  (note: this is a PRE-audit probe; raw_invoice_data is populated by
+   ups_pre_to_post during the audit run itself - see step log below)
 
 ==============================================================================
   04  AUDIT RUN
 ==============================================================================
-etl_run_id   : 18
+etl_run_id   : 19
 status       : COMPLETE
-total lines  : 5
-closed       : 3
-open (FAIL)  : 2
+total lines  : 50678
+closed       : 20513
+open (FAIL)  : 30165
 
 ==============================================================================
   04.5  FEDEX UNMATCHED DIAGNOSTIC
@@ -94,55 +97,61 @@ tracking_id|customer_ref|prefix_hits_any|prefix_hits_fedex_only|distinct_clients
 --- shape of any FedEx-shipped dispense rows (so we can see how dispense.ship_method names FedEx) ---
 client_id|client_name|tracking_number|order_number|ship_method|shipping_carrier|production_date
 ---------|-----------|---------------|------------|-----------|----------------|---------------
-[10 dispense rows REDACTED — real client name + tracking IDs + order numbers]
+[10 dispense rows REDACTED - real client names + tracking IDs + order numbers
+ + internal shipping_carrier reference codes]
 
 ==============================================================================
   05  RUN STATUS
 ==============================================================================
-=== etl_run_id 18 step log ===
-  [COMPLETE]  refresh_dispense_cache            rows=304963  REUSED run 12 (258 min old); [counts retained for structural diff]
+=== etl_run_id 19 step log ===
+  [COMPLETE]  refresh_dispense_cache            rows=304963  REUSED run 12 (1199 min old); [counts retained for structural diff]
   [COMPLETE]  purge_audit_detail                rows=     0  audit_detail wiped: 0; normalized wiped: 0
   [COMPLETE]  normalize_easypost                rows=     2  2 EasyPost lines normalized
   [COMPLETE]  normalize_fedex                   rows=     3  3 FedEx lines normalized
-  [COMPLETE]  normalize_ups                     rows=     0  0 UPS shipments normalized (multi-row collapsed)
-  [COMPLETE]  populate_audit_detail             rows=     5  5 audit_detail rows staged (is_closed=0)
-  [COMPLETE]  match_01_direct                   rows=     3  3 direct matches closed
+  [COMPLETE]  ups_pre_to_post                   rows=221410  221410 rows landed in raw_invoice_data (from ups_invoice_landing site=MEM)
+  [COMPLETE]  normalize_ups                     rows= 50673  50673 UPS shipments normalized (multi-row collapsed)
+  [COMPLETE]  populate_audit_detail             rows= 50678  50678 audit_detail rows staged (is_closed=0)
+  [COMPLETE]  match_01_direct                   rows= 20364  20364 direct matches closed
   [COMPLETE]  match_02_ep_pretransit            rows=     0  0 EasyPost pre-transit closed (no client billed)
   [COMPLETE]  match_03_ep_returns               rows=     0  0 EasyPost returns closed
   [COMPLETE]  match_04_cs_override              rows=     0  0 CS-override matches closed
-  [COMPLETE]  match_05_ups_returns              rows=     0  0 UPS return-reference matches closed
+  [COMPLETE]  match_05_ups_returns              rows=   149  149 UPS return-reference matches closed
   [COMPLETE]  match_06_fedex_refs               rows=     0  0 FedEx prefix-matches closed (v2: prefix + ship_method=FEDEX)
 
-=== run 18: counts by carrier + match_type ===
+=== run 19: counts by carrier + match_type ===
   EasyPost   (UNMATCHED)                                       lines=    2  $=[REDACTED]
   FedEx      DIRECT CARRIER SHIPMENT ID MATCH                  lines=    3  $=[REDACTED]
+  UPS        (UNMATCHED)                                       lines=30163  $=[REDACTED]
+  UPS        DIRECT CARRIER SHIPMENT ID MATCH                  lines=20361  $=[REDACTED]
+  UPS        UPS RETURN REFERENCE DIRECT MATCH CF ORDER NO     lines=  149  $=[REDACTED]
 
 ==============================================================================
   06  EXPORTS
 ==============================================================================
-detail_costplus.csv            3 rows
+detail_costplus.csv        24441 rows
 detail_zone.csv                0 rows
-fails_ups.csv                  0 rows
+fails_ups.csv              30163 rows
 fails_fedex.csv                0 rows
 fails_easypost.csv             2 rows
 
 ==============================================================================
   07  UNIFIED INVOICE
 ==============================================================================
-invoices_unified.csv           3 rows
-invoice_summary.csv            1 rows
+invoices_unified.csv       24442 rows
+invoice_summary.csv            4 rows
 
 ==============================================================================
   SUMMARY
 ==============================================================================
-started        : 05/11/2026 16:26:59
-ended          : 05/11/2026 16:28:09
-duration       : 70 s
-warnings       : 1
+started        : 05/12/2026 08:07:58
+ended          : 05/12/2026 08:09:26
+duration       : 88 s
+warnings       : 2
 errors         : 0
 
-Run folder: <utopia-root>/logs/big_run_2026-05-11_162659
+Run folder: <utopia-root>/logs/big_run_2026-05-12_080758
 Send the entire run folder back for review.
 
 --- WARNINGS ---
+  Expected 16 PROC rows, found 15. Migrations may be partial.
   raw_invoice_data has no UPS rows for site 'MEM'. The audit will run without UPS data. Load via the existing UTOPIA UPS chain (sp_etl_ups_*) first if needed.
