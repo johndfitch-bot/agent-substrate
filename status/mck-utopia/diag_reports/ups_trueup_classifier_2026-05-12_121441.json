@@ -1,0 +1,319 @@
+{
+    "stamp":  "2026-05-12_121441",
+    "sql_server":  "10.18.87.158",
+    "sql_database":  "UTOPIA",
+    "site_code":  "MEM",
+    "window":  {
+                   "start":  "2026-04-01",
+                   "end":  "2026-04-30"
+               },
+    "etl_run_id":  22,
+    "total_unmatched_ups":  10491,
+    "buckets":  {
+                    "D_null_tracking_cache_bug":  {
+                                                      "count":  0,
+                                                      "total_dollars":  0,
+                                                      "distinct_invoices":  0,
+                                                      "production_date_range":  [
+                                                                                    null,
+                                                                                    null
+                                                                                ],
+                                                      "samples":  [
+
+                                                                  ]
+                                                  },
+                    "E_not_in_cf_ops":  {
+                                            "count":  182,
+                                            "total_dollars":  1469.71,
+                                            "distinct_invoices":  4,
+                                            "production_date_range":  [
+                                                                          null,
+                                                                          null
+                                                                      ],
+                                            "samples":  [
+                                                            {
+                                                                "tracking":  "[REDACTED-E-01]",
+                                                                "invoice_date":  "2026-04-04",
+                                                                "net_amount":  7.4500,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-02]",
+                                                                "invoice_date":  "2026-04-04",
+                                                                "net_amount":  4.4400,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-03]",
+                                                                "invoice_date":  "2026-04-04",
+                                                                "net_amount":  4.4400,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-04]",
+                                                                "invoice_date":  "2026-04-11",
+                                                                "net_amount":  42.8200,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-05]",
+                                                                "invoice_date":  "2026-04-11",
+                                                                "net_amount":  5.7900,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-06]",
+                                                                "invoice_date":  "2026-04-11",
+                                                                "net_amount":  9.7600,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-07]",
+                                                                "invoice_date":  "2026-04-11",
+                                                                "net_amount":  1.3500,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-08]",
+                                                                "invoice_date":  "2026-04-25",
+                                                                "net_amount":  4.7000,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-09]",
+                                                                "invoice_date":  "2026-04-11",
+                                                                "net_amount":  5.8300,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            },
+                                                            {
+                                                                "tracking":  "[REDACTED-E-10]",
+                                                                "invoice_date":  "2026-04-11",
+                                                                "net_amount":  4.8500,
+                                                                "sm_row_count":  0,
+                                                                "sm_client_count":  0,
+                                                                "sm_min_prod_date":  null,
+                                                                "sm_max_prod_date":  null
+                                                            }
+                                                        ]
+                                        },
+                    "F_null_client_cf_ops":  {
+                                                 "count":  0,
+                                                 "total_dollars":  0,
+                                                 "distinct_invoices":  0,
+                                                 "production_date_range":  [
+                                                                               null,
+                                                                               null
+                                                                           ],
+                                                 "samples":  [
+
+                                                             ]
+                                             },
+                    "C_multi_client":  {
+                                           "count":  0,
+                                           "total_dollars":  0,
+                                           "distinct_invoices":  0,
+                                           "production_date_range":  [
+                                                                         null,
+                                                                         null
+                                                                     ],
+                                           "samples":  [
+
+                                                       ]
+                                       },
+                    "A_pre_window":  {
+                                         "count":  10309,
+                                         "total_dollars":  69642.79,
+                                         "distinct_invoices":  4,
+                                         "production_date_range":  [
+                                                                       "2025-05-19",
+                                                                       "2026-03-31"
+                                                                   ],
+                                         "samples":  [
+                                                         {
+                                                             "tracking":  "[REDACTED-A-01]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  19.4000,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-25",
+                                                             "sm_max_prod_date":  "2026-03-25"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-02]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  5.7900,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-26",
+                                                             "sm_max_prod_date":  "2026-03-26"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-03]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  7.4200,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-28",
+                                                             "sm_max_prod_date":  "2026-03-28"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-04]",
+                                                             "invoice_date":  "2026-04-11",
+                                                             "net_amount":  5.7900,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-31",
+                                                             "sm_max_prod_date":  "2026-03-31"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-05]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  5.7900,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-26",
+                                                             "sm_max_prod_date":  "2026-03-26"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-06]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  4.4400,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-28",
+                                                             "sm_max_prod_date":  "2026-03-28"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-07]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  5.7900,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-28",
+                                                             "sm_max_prod_date":  "2026-03-28"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-08]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  7.4200,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-26",
+                                                             "sm_max_prod_date":  "2026-03-26"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-09]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  5.7900,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-26",
+                                                             "sm_max_prod_date":  "2026-03-26"
+                                                         },
+                                                         {
+                                                             "tracking":  "[REDACTED-A-10]",
+                                                             "invoice_date":  "2026-04-04",
+                                                             "net_amount":  5.7900,
+                                                             "sm_row_count":  1,
+                                                             "sm_client_count":  1,
+                                                             "sm_min_prod_date":  "2026-03-31",
+                                                             "sm_max_prod_date":  "2026-03-31"
+                                                         }
+                                                     ]
+                                     },
+                    "B_post_window":  {
+                                          "count":  0,
+                                          "total_dollars":  0,
+                                          "distinct_invoices":  0,
+                                          "production_date_range":  [
+                                                                        null,
+                                                                        null
+                                                                    ],
+                                          "samples":  [
+
+                                                      ]
+                                      },
+                    "G_within_window_bug":  {
+                                                "count":  0,
+                                                "total_dollars":  0,
+                                                "distinct_invoices":  0,
+                                                "production_date_range":  [
+                                                                              null,
+                                                                              null
+                                                                          ],
+                                                "samples":  [
+
+                                                            ]
+                                            }
+                },
+    "bucket_A_production_date_histogram":  [
+                                               {
+                                                   "month":  "2025-05",
+                                                   "count":  2
+                                               },
+                                               {
+                                                   "month":  "2025-06",
+                                                   "count":  2
+                                               },
+                                               {
+                                                   "month":  "2025-07",
+                                                   "count":  4
+                                               },
+                                               {
+                                                   "month":  "2025-08",
+                                                   "count":  2
+                                               },
+                                               {
+                                                   "month":  "2025-11",
+                                                   "count":  2
+                                               },
+                                               {
+                                                   "month":  "2025-12",
+                                                   "count":  3
+                                               },
+                                               {
+                                                   "month":  "2026-01",
+                                                   "count":  9
+                                               },
+                                               {
+                                                   "month":  "2026-02",
+                                                   "count":  17
+                                               },
+                                               {
+                                                   "month":  "2026-03",
+                                                   "count":  10268
+                                               }
+                                           ],
+    "seconds_wall":  872.73,
+    "status":  "OK",
+    "errors":  [
+
+               ]
+}
