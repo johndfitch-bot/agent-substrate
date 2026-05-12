@@ -1,0 +1,19 @@
+{
+    "stamp":  "2026-05-12_080340",
+    "host":  "A5CD2458QJK",
+    "user":  "eyufqoe",
+    "site_code":  "MEM",
+    "target_batch_id":  1,
+    "expected_pre_count":  61387,
+    "expected_post_count":  221410,
+    "sql_server":  "10.18.87.158",
+    "sql_database":  "UTOPIA",
+    "pre_count":  61387,
+    "delete_executed":  true,
+    "deleted_count":  61387,
+    "post_count":  221410,
+    "seconds_delete":  1.61,
+    "seconds_wall":  3.96,
+    "status":  "OK",
+    "error":  null
+}
