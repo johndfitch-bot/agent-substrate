@@ -1,147 +1,146 @@
-# META — Memphis True-Up April close-out, FINAL (run 23)
+# META — Memphis True-Up April close-out with CS overrides (run 24)
 
-> **Result: 99.78% match rate. Memphis True-Up replatform feature-complete
-> for the April 2026 period.**
+> **Match rate: 99.83% — up from run 23's 99.78%.** The Fresenius CS-override
+> load (293 trackings inserted at commit `88cf5d7`) actually fired on this
+> audit run via `match_04_cs_override`. Net win: +24 closures, +$117.53
+> client-billable cost moved from absorbed-loss into matched-with-markup.
 >
-> The extended-dispense fix (`-ShipMonthStart 2026-03-01` + fresh cache)
-> actually applied this run. ship_window in `etl_run_log.dt_start/dt_end`
-> reads `2026-03-01 → 2026-04-30`. Dispense pull row count is 541,610
-> (almost double the 284,816 from April-only runs 20/21/22), confirming
-> the wider window was honored.
+> **The win is real but ~10× smaller than the original projection.** I had
+> projected +280-290 closures based on "293 inserted → most will match" —
+> that was wrong. Reality: only 28 of the 293 corresponded to UPS rows that
+> were still unmatched after run 23's match_01_direct + match_05_ups_returns.
+> The remaining 265 overrides are dormant (the trackings either matched
+> earlier in the cascade or aren't in run 24's audit_detail at all). See
+> "Why the projection was off" below.
 
 | Field | Value |
 |---|---|
-| run_stamp | 2026-05-12_124153 |
-| etl_run_id | **23** |
-| runner | `scripts/run_memphis_trueup_april_extended.bat` (fixed in commit `110bb2a`) |
+| run_stamp | 2026-05-12_152152 |
+| etl_run_id | **24** |
+| runner | `scripts/run_memphis_trueup_april_extended.bat` |
 | ship_window | (redacted — March + April 2026) |
-| dispense_pull_mode | **FRESH PULL** (`@max_reuse_age_minutes = 0`) — 870s, 541,610 rows, 252,973 unique trackings |
+| dispense_pull_mode | FRESH PULL — 676s, 541,610 rows, 252,973 unique trackings |
 | status | COMPLETE |
-| duration | 940 s (15.7 min, mostly the wider dispense pull) |
-| warnings | 1 (PROC smoke; same as every other recent run — smoke-filter bug, SP confirmed present) |
+| duration | 741 s (12.4 min) |
+| warnings | 1 (PROC smoke; cosmetic, every run since 0121) |
 | errors | 0 |
 
-## Headline comparison
+## Run 23 → Run 24 comparison
 
-| Metric | Run 20 (Apr-only, FRESH) | **Run 23 (Mar+Apr, FRESH)** | Δ |
+| Step | Run 23 | Run 24 | Δ |
 |---|---:|---:|---:|
-| ship_window | Apr 1 → Apr 30 | **Mar 1 → Apr 30** | wider |
-| dispense rows pulled | 284,816 | **541,610** | **+256,794 (+90%)** |
-| dispense unique trackings | 138,848 | **252,973** | **+114,125 (+82%)** |
-| `match_01_direct` closures | 40,113 | **50,384** | **+10,271** |
-| `match_05_ups_returns` closures | 71 | **184** | +113 |
-| `match_06_fedex_refs` closures | 1 | 0 | -1 (noisy at this scale) |
-| **Total closed** | **40,185 (79.3%)** | **50,568 (99.78%)** | **+10,383 (+20.5 pp)** ✅ |
-| Open (FAIL) | 10,493 | **110** | **-10,383 (-99.0%)** ✅ |
-| UPS unmatched lines | 10,491 | **110** | **-10,381 (-99.0%)** ✅ |
-| **`invoices_unified.csv` rows** | 46,011 | **58,398** | **+12,387 (+26.9%)** ✅ |
-| `fails_ups.csv` rows | 10,491 | **110** | **-10,381 (-99.0%)** ✅ |
-| `fails_fedex.csv` rows | 2 | 0 | -2 ✅ |
-| `fails_easypost.csv` rows | 0 | 0 | 0 |
-| Duration | 523 s | 940 s | +417 s (wider pull is the cost) |
+| `refresh_dispense_cache` rows | 541,610 | 541,610 | 0 (same window) |
+| `refresh_dispense_cache` unique trackings | 252,973 | 252,973 | 0 |
+| `ups_pre_to_post` rows | 221,410 | 221,410 | 0 (UPS landing unchanged) |
+| `normalize_ups` rows | 50,673 | 50,673 | 0 |
+| `populate_audit_detail` | 50,678 | 50,678 | 0 |
+| `match_01_direct` | 50,384 | 50,384 | 0 (dispense cache unchanged) |
+| `match_02_ep_pretransit` | 0 | 0 | 0 |
+| `match_03_ep_returns` | 0 | 0 | 0 |
+| **`match_04_cs_override`** | **0** | **28** | **+28** ✅ |
+| `match_05_ups_returns` | 184 | 180 | -4 (cannibalized by match_04 firing first) |
+| `match_06_fedex_refs` | 0 | 0 | 0 |
+| **Total closed** | 50,568 (99.78%) | **50,592 (99.83%)** | **+24 (+0.05 pp)** |
+| Open (FAIL) | 110 | **86** | **-24** |
+| **UPS UNMATCHED dollars** | $987.70 | **$870.17** | **-$117.53** |
+| `invoices_unified.csv` rows | 58,398 | **58,422** | +24 |
+| `fails_ups.csv` rows | 110 | **86** | -24 |
+| `detail_costplus.csv` rows | 58,394 | 58,418 | +24 |
 
-## Classifier prediction vs actual recovery
+## Net win in dollars (closure breakdown)
 
-The classifier (`ups_trueup_classifier_2026-05-12_121441.json`, against run
-22 ≈ run 20) predicted:
+| Source | Run 23 | Run 24 | Δ dollars |
+|---|---:|---:|---:|
+| `UPS (UNMATCHED)` | $987.70 | $870.17 | **-$117.53** moved off the absorbed-loss line |
+| `UPS DIRECT MATCH` | $339,422.49 | $339,422.49 | 0 (unchanged) |
+| `UPS RETURN REF MATCH` | $1,120.59 | $1,093.94 | -$26.65 (cannibalized to match_04) |
+| `UPS CS-OVERRIDE MATCH` (new bucket) | $0.00 | **$144.18** | **+$144.18** newly captured |
 
-* **Bucket A_pre_window**: 10,309 rows / $69,642.79 / 99.6% concentrated
-  in 2026-03 production. *Predicted recovery if dispense window widened
-  to include March: ~10,268 (the March-only subset of A).*
-* **Bucket E_not_in_cf_ops**: 182 rows / $1,469.71. *Predicted floor —
-  cannot be matched without a dispense record.*
+Math: +$144.18 (new match_04) - $26.65 (lost from match_05) = +$117.53 net
+moved from UNMATCHED into matched. Conservation check: total UPS billed
+$341,530.78 (unchanged across run 23 / run 24); only the bucket split
+shifted.
 
-Actual run-23 outcome:
+At Fresenius's default 5% markup, the recovered $117.53 carrier cost flows
+to client billings as roughly **$123.41** in additional invoiced revenue.
 
-| Bucket | Predicted recovery | Actual recovery | Variance |
-|---|---:|---:|---|
-| A_pre_window (Mar dispenses) | ~10,268 → matched | **10,381 matched** | +113 (the match_05 returns also benefited from the wider cache) |
-| E_not_in_cf_ops (floor) | 182 unmatched | **110 unmatched** | -72 (some E-bucketed trackings matched via secondary references — likely match_05's CF order number path picking up previously-bucketed-as-E rows that DID have CF order references in dispense for non-tracking columns) |
+## Why the projection was off (~280 expected, 28 delivered)
 
-The classifier slightly under-predicted recovery; reality was even better
-because the wider cache let `match_05_ups_returns` resolve more return-
-reference shipments. Total unmatched at the floor: **110 rows / $987.70**
-— well under the classifier's $1,469.71 prediction.
+The original projection ("293 overrides → ~280-290 match_04 closures") was
+wrong in its assumption about applicability. Reality:
 
-## UPS dollar flow (audit accounting)
+| Override bucket | Count | Notes |
+|---|---:|---|
+| Inserted into cs_return_override_log | **293** | from `fresenius_overrides_2026-05-12_151746.json` |
+| Of which: applicable to run 24's unmatched UPS set | **28** | the rows match_04 actually closed |
+| Of which: already closed by an earlier matcher (match_01_direct) | unknown but large | match_04 only fires on rows where `is_closed = 0` |
+| Of which: not in run 24's audit_detail at all | unknown but large | Fresenius's list spans multiple periods; only April-billed lines appear in this run's audit |
 
-Run 23 by carrier × match_type (total UPS dollars conserved — wider cache
-moved $ from UNMATCHED → MATCHED, didn't change UPS-billed total):
+The 265 "dormant" overrides aren't a problem — they're a feature. They sit
+in `cs_return_override_log` and will fire automatically on any **future**
+audit run that produces unmatched UPS rows for those trackings (e.g., a
+re-bill, a delayed return invoice, a different month's run where the
+tracking surfaces).
 
-| Carrier | match_type | Lines | Dollars |
-|---|---|---:|---:|
-| EasyPost | DIRECT | 2 | $5.83 |
-| FedEx | DIRECT | 3 | $31.52 |
-| UPS | **DIRECT** | **50,379** | **$339,422.49** |
-| UPS | **RETURN REF** | **184** | **$1,120.59** |
-| UPS | **(UNMATCHED)** | **110** | **$987.70** ← structural floor |
-| TOTAL UPS | — | 50,673 | $341,530.78 |
+What this tells us about the original 110 residual:
+* **28 lines / $117.53 (25%)** were Fresenius returns curated by the
+  ops list — recoverable via the override mechanism, now closed.
+* **82 lines / $870.17 (75%)** remain unmatched. These are either:
+  * Non-Fresenius UPS returns that need their own client's override list
+  * Fresenius returns not on the curated list (gap in ops tracking)
+  * The 7 anomalous (malformed-length) trackings from the load — those
+    won't match anything because the override row's `carrier_shipment_id`
+    differs from the canonical UPS tracking format
+  * Genuine never-dispensed UPS-billed shipments (third-party scans,
+    label-only never shipped, etc.)
 
-Compared to run 20's UPS breakdown (40,111 DIRECT + 71 RETURN REF + 10,491
-UNMATCHED = $270,022.38 + $395.90 + $71,112.50 = $341,530.78 — same total
-billed): **$70,124.80 moved from UNMATCHED into MATCHED** (now bills back
-to clients with markup), **leaving $987.70 as the structural floor**.
+## New structural floor
 
-## What the 110 remaining unmatched lines are
+**86 UPS lines / $870.17** is the new residual. At avg $10.12/line, this
+is consistent with returns + misc UPS small-package costs. The audit
+pipeline itself has nothing more to give without more override data or
+additional match strategies.
 
-Per the classifier, bucket E (not in CF_OPS SCRIPTMASTER) at $1,469.71
-was the predicted floor. Actual floor came in lower at **$987.70 / 110
-lines**, average $8.98/row. These are UPS-billed shipments where:
+## Phase D final close-out
 
-* The tracking number doesn't appear in `CF_OPS.cf_memphis.SCRIPTMASTER`
-  at all (third-party scans, label-only-never-shipped, returns of
-  shipments not dispensed by this pharmacy)
-* They have no CF order reference either (otherwise `match_05_ups_returns`
-  would have caught them)
+| Criterion | Run 19 | Run 20 | Run 23 | **Run 24** |
+|---|---|---|---|---|
+| Match rate | 40.5% | 79.3% | 99.78% | **99.83%** |
+| `match_04_cs_override` | 0 | 0 | 0 | **28** |
+| `match_05_ups_returns` | 149 | 71 | 184 | 180 |
+| UPS unmatched | 30,163 | 10,491 | 110 | **86** |
+| UPS unmatched dollars | ~$202,742 | ~$71,113 | $987.70 | **$870.17** |
+| `invoices_unified.csv` rows | 24,442 | 46,011 | 58,398 | **58,422** |
 
-These are genuinely unbillable to client accounts at the line level. The
-audit's `fails_ups.csv` (110 rows) captures them for ops eyes; the
-dollar magnitude is small enough that absorbing them is operationally
-cheaper than chasing them down.
+**Audit pipeline is feature-complete vs Access for the April 2026 period.**
+Further closures would require: extending the Fresenius override list with
+the other ~75% of residual trackings, OR new override lists from other
+clients ([REDACTED-OTHER-CLIENT], etc.), OR a new match strategy. None of those are blocking
+this period's close-out.
 
-## Smoke check — still 15/16 PROC mismatch
+## Where the 28 closures came from (informational)
 
-Same warning every run since 0121 shipped. `sp_etl_ups_pre_to_post` IS
-callable (step log line 86 in REPORT.txt shows it ran with 221,410 rows
-this run, identical to runs 20/21/22). The smoke-check query in
-`scripts/memphis_trueup_big_run.ps1` has a name/schema filter that
-doesn't catch the new SP. Cosmetic — does not affect audit outcome.
+The 28 newly-closed lines are all from Fresenius (client_id=5) via the
+`CUSTOMER SERVICE LOG MATCH` match_type. Their `carrier_shipment_id` values
+overlap with Fresenius's curated returns list AND were in run 23's
+fails_ups.csv. They now flow into `invoices_unified.csv` with Fresenius's
+default markup (cost+5% per `carrier_trueup.client.markup_pct` for
+client_id=5, unless overridden in `client_invoice_rates_zone` — Fresenius
+is `billing_model=1` cost+, not zone).
 
-## Phase D close-out call
+## Cosmetic items (unchanged from prior runs, none blocking)
 
-| Criterion | Run 19 (Mar, REUSED) | Run 20 (Apr, FRESH) | **Run 23 (Mar+Apr, FRESH)** |
-|---|---|---|---|
-| Migration 0121 applied + SP callable | ✅ | ✅ | ✅ |
-| UPS lines flowing into audit cascade | ✅ (50,673 normalized) | ✅ | ✅ |
-| UPS lines in `invoices_unified.csv` | ✅ (some) | ✅ (40k+ direct) | ✅ **50,563 UPS** |
-| Match rate at expected band | 40.5% (capped by stale cache) | 79.3% (April-only cache) | **99.78%** ✅ |
-| Stale UPS WARNING gone | n/a | ✅ | ✅ |
-| Smoke check PROC=16 | ⚠️ 15/16 | ⚠️ 15/16 | ⚠️ 15/16 (cosmetic) |
-
-**Memphis True-Up April 2026 close-out: READY.** Match rate matches what
-the Access pipeline historically produced for similar windows; structural
-floor of ~$1k unmatched is normal operational baseline.
-
-## Cosmetic / cleanup items (none blocking)
-
-* Smoke-check filter in `memphis_trueup_big_run.ps1` should be widened to
-  include `sp_etl_ups_pre_to_post` (one-line fix; turns 15/16 warning
-  into clean smoke pass).
-* The 110 fails_ups.csv rows could get a brief ops investigation if
-  Finance cares to chase $988 — but at $8.98/row average, probably
-  not worth the labor.
-* The bat-shim caret-continuation lesson (run 21/22 propagation failure,
-  fixed in commit `110bb2a`) is worth capturing in a developer note:
-  "all .bat shims invoking PowerShell must use single-line invocation;
-  caret continuation is unreliable under double-click launches."
-
-## Runner META.json — still not consistently landing on origin
-
-Same observation as runs 20 and 22: the `run_memphis_trueup_april.ps1`
-wrapper's separate META.json commit didn't land on origin for run 23
-either. big_run's REPORT.txt auto-publish (commit `3063f06`) is on
-origin; the wrapper's follow-on META commit is not. The wrapper's
-`git pull --rebase + git add + git commit + git push` sequence has a
-silent-failure mode worth investigating — but the substrate META.md
-(this file) carries the comparison view authoritatively, so it's a
-nice-to-have for ops record-keeping, not a blocker.
+* PROC smoke 15/16 — same warning since 0121 shipped, smoke-filter bug
+  not catching `sp_etl_ups_pre_to_post` even though step log proves it
+  ran (`ups_pre_to_post  rows=221410`). One-line fix in
+  `scripts/memphis_trueup_big_run.ps1` queue for a follow-up cleanup PR.
+* The 7 anomalous trackings loaded into cs_return_override_log will
+  never fire match_04 — their carrier_shipment_id values don't appear
+  in any legitimate UPS invoice. They take 7 rows in the table but
+  cause no harm. Worth cleaning up if Fitch provides corrected forms;
+  otherwise they're just inert clutter.
+* The runner's own META.json didn't push to origin again for this run
+  (same pattern as runs 20 and 23). big_run's REPORT.txt auto-publish
+  (commit `2e045ac`) landed; the wrapper's separate META.json commit
+  didn't. Worth investigating the wrapper's git-push step under load,
+  but the substrate META.md is authoritative anyway.

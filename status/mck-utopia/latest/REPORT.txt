@@ -2,14 +2,16 @@
 ==============================================================================
   REDACTION NOTICE  (scrubbed by CC for public substrate, 2026-05-12)
 ==============================================================================
-Source        : utopia/dist/big_run_reports/big_run_2026-05-12_124153/REPORT.txt
+Source        : utopia/dist/big_run_reports/big_run_2026-05-12_152152/REPORT.txt
 Source repo   : johndfitch-bot/utopia (PRIVATE - McKesson IP boundary)
-Run context   : etl_run_id=23. THE successful extended-dispense run --
-                ship window 2026-03-01 -> 2026-04-30 (March + April + 6-day
-                overflow into May), fresh dispense pull. Closed 50,568 of
-                50,678 audit lines = 99.78% match rate, up from run 20's
-                79.3%. The bat-shim fix from commit 110bb2a was correctly
-                applied this time. See META.md for the full comparison.
+Run context   : etl_run_id=24. Extended-dispense rerun AFTER the Fresenius
+                CS-override loader (commit 88cf5d7) wrote 293 entries into
+                carrier_trueup.cs_return_override_log. First run where
+                match_04_cs_override fires non-zero. Goal: close as many
+                of the 110 unmatched UPS lines from run 23 as the override
+                list covers. Result: +24 net closures (28 match_04 minus 4
+                cannibalized from match_05_ups_returns). See META.md for
+                the per-bucket comparison and the projection gap analysis.
 Scrub policy  : strip hostnames, usernames, filesystem paths, internal IPs,
                 SQL user names, SQL Server version banners, client names,
                 tracking numbers, order numbers, dollar amounts, and any
@@ -22,13 +24,12 @@ Kept (structural only) : section headers, migration filenames, smoke-check
 ==============================================================================
   00  ENVIRONMENT
 ==============================================================================
-stamp        : 2026-05-12_124153
+stamp        : 2026-05-12_152152
 host         : [REDACTED-HOSTNAME] ([REDACTED-USER])
 utopia root  : <utopia-root>
 trueup root  : <trueup-root>
 sql target   : <sql-server-internal> / UTOPIA (SQL user [REDACTED])
-ship window  : <period>   (* extended: 2026-03-01 -> 2026-04-30, the actual
-                            window the runner intended this time)
+ship window  : <period>   (* extended: 2026-03-01 -> 2026-04-30)
 sqlcmd       : <sqlcmd>
 python       : <python>
 
@@ -50,8 +51,8 @@ SKIPPED via -SkipMigrations.
 TABLE : 9 found (expected 9)
 VIEW  : 2 found (expected 2)
 PROC  : 15 found (expected 16)
-  (same 15/16 gap as runs 19/20/21/22; smoke-check filter bug, SP confirmed
-   present via step log)
+  (same 15/16 gap as every run since 0121 shipped; smoke-check filter bug,
+   SP confirmed present via step log)
 
 ==============================================================================
   03  CSV LOAD
@@ -61,11 +62,11 @@ SKIPPED via -SkipCsvLoad.
 ==============================================================================
   04  AUDIT RUN
 ==============================================================================
-etl_run_id   : 23
+etl_run_id   : 24
 status       : COMPLETE
 total lines  : 50678
-closed       : 50568
-open (FAIL)  : 110
+closed       : 50592
+open (FAIL)  : 86
 
 ==============================================================================
   04.5  FEDEX UNMATCHED DIAGNOSTIC
@@ -73,11 +74,11 @@ open (FAIL)  : 110
 --- unmatched FedEx + reference hit counts ---
 tracking_id|orig_ref|upd_ref|recipient_company|recipient_city|exact_order_number|exact_host_order|exact_rx_number|exact_id_key|like_any
 -----------|--------|-------|-----------------|--------------|------------------|----------------|---------------|------------|--------
-(no unmatched FedEx -- all 3 closed via DIRECT this run)
+(no unmatched FedEx -- all 3 closed via DIRECT)
 --- sample of any dispense rows containing the orig_ref values ---
 client_id|client_name|tracking_number|order_number|host_order|rx_number|ship_method|shipping_carrier
 ---------|-----------|---------------|------------|----------|---------|-----------|----------------
-(no rows -- there are no unmatched orig_refs to look up)
+(no rows -- no unmatched orig_refs to look up)
 --- prefix + ship_method=FEDEX% test (v2 of match_06 -- shape that should resolve) ---
 tracking_id|customer_ref|prefix_hits_any|prefix_hits_fedex_only|distinct_clients_fedex_only
 -----------|------------|---------------|----------------------|---------------------------
@@ -91,8 +92,8 @@ client_id|client_name|tracking_number|order_number|ship_method|shipping_carrier|
 ==============================================================================
   05  RUN STATUS
 ==============================================================================
-=== etl_run_id 23 step log ===
-  [COMPLETE]  refresh_dispense_cache            rows=541610  FRESH PULL (870s): 541610 rows; 252973 unique trackings.
+=== etl_run_id 24 step log ===
+  [COMPLETE]  refresh_dispense_cache            rows=541610  FRESH PULL (676s): 541610 rows; 252973 unique trackings.
   [COMPLETE]  purge_audit_detail                rows=     0  audit_detail wiped: 0; normalized wiped: 0
   [COMPLETE]  normalize_easypost                rows=     2  2 EasyPost lines normalized
   [COMPLETE]  normalize_fedex                   rows=     3  3 FedEx lines normalized
@@ -102,42 +103,43 @@ client_id|client_name|tracking_number|order_number|ship_method|shipping_carrier|
   [COMPLETE]  match_01_direct                   rows= 50384  50384 direct matches closed
   [COMPLETE]  match_02_ep_pretransit            rows=     0  0 EasyPost pre-transit closed (no client billed)
   [COMPLETE]  match_03_ep_returns               rows=     0  0 EasyPost returns closed
-  [COMPLETE]  match_04_cs_override              rows=     0  0 CS-override matches closed
-  [COMPLETE]  match_05_ups_returns              rows=   184  184 UPS return-reference matches closed
+  [COMPLETE]  match_04_cs_override              rows=    28  28 CS-override matches closed
+  [COMPLETE]  match_05_ups_returns              rows=   180  180 UPS return-reference matches closed
   [COMPLETE]  match_06_fedex_refs               rows=     0  0 FedEx prefix-matches closed (v2: prefix + ship_method=FEDEX)
 
-=== run 23: counts by carrier + match_type ===
+=== run 24: counts by carrier + match_type ===
   EasyPost   DIRECT CARRIER SHIPMENT ID MATCH                  lines=    2  $=[REDACTED]
   FedEx      DIRECT CARRIER SHIPMENT ID MATCH                  lines=    3  $=[REDACTED]
-  UPS        (UNMATCHED)                                       lines=  110  $=[REDACTED]
+  UPS        (UNMATCHED)                                       lines=   86  $=[REDACTED]
+  UPS        CUSTOMER SERVICE LOG MATCH                        lines=   28  $=[REDACTED]
   UPS        DIRECT CARRIER SHIPMENT ID MATCH                  lines=50379  $=[REDACTED]
-  UPS        UPS RETURN REFERENCE DIRECT MATCH CF ORDER NO     lines=  184  $=[REDACTED]
+  UPS        UPS RETURN REFERENCE DIRECT MATCH CF ORDER NO     lines=  180  $=[REDACTED]
 
 ==============================================================================
   06  EXPORTS
 ==============================================================================
-detail_costplus.csv        58394 rows
+detail_costplus.csv        58418 rows
 detail_zone.csv                0 rows
-fails_ups.csv                110 rows
+fails_ups.csv                 86 rows
 fails_fedex.csv                0 rows
 fails_easypost.csv             0 rows
 
 ==============================================================================
   07  UNIFIED INVOICE
 ==============================================================================
-invoices_unified.csv       58398 rows
+invoices_unified.csv       58422 rows
 invoice_summary.csv            5 rows
 
 ==============================================================================
   SUMMARY
 ==============================================================================
-started        : 05/12/2026 12:41:53
-ended          : 05/12/2026 12:57:33
-duration       : 940 s
+started        : 05/12/2026 15:21:52
+ended          : 05/12/2026 15:34:13
+duration       : 741 s
 warnings       : 1
 errors         : 0
 
-Run folder: <utopia-root>/logs/big_run_2026-05-12_124153
+Run folder: <utopia-root>/logs/big_run_2026-05-12_152152
 Send the entire run folder back for review.
 
 --- WARNINGS ---
