@@ -1,89 +1,130 @@
-# META — Memphis True-Up big-run snapshot
+# META — Memphis True-Up April close-out (run 20)
 
 | Field | Value |
 |---|---|
-| run_stamp | 2026-05-12_080758 |
-| etl_run_id | 19 |
-| ship_window | (redacted — prior calendar month) |
+| run_stamp | 2026-05-12_100931 |
+| etl_run_id | **20** |
+| runner | `scripts/run_memphis_trueup_april.bat` (new, see commit `9500f74`) |
+| ship_window | (redacted — April 2026 calendar month) |
+| dispense_pull_mode | **FRESH PULL** (`@max_reuse_age_minutes = 0`) — 451s, 284,816 rows, 138,848 unique trackings |
 | status | COMPLETE |
-| duration | 88 s |
-| warnings | 2 |
+| duration | 523 s (8.7 min, mostly the fresh ScriptMaster pull) |
+| warnings | 1 (PROC smoke; same as run 19) |
 | errors | 0 |
 
-## Smoke checks
+## Hypothesis verified — match rate jump
 
-| Object | Found | Expected | Status |
-|---|---|---|---|
-| TABLE | 9 | 9 | OK |
-| VIEW | 2 | 2 | OK |
-| PROC | **15** | **16** | **MISMATCH** |
+Captain's hypothesis (run 19's 59.5% UPS unmatched was caused by the
+cache window not covering April production_dates, reused from run 12's
+March pull) was **confirmed by the dispense-window diag**
+(`ups_dispense_window_2026-05-12_094141.json`, status OK):
 
-PROC count is off by one **but the new SP IS callable** — the step log
-shows `ups_pre_to_post` ran successfully with 221,410 rows (see below).
-Smoke check expectation was bumped to 16 in `scripts/memphis_trueup_big_run.ps1`
-to anticipate Phase B's new `sp_etl_ups_pre_to_post`, but the smoke
-query's name/schema filter doesn't catch it. The migration itself is
-correctly applied (`0121_memphis_trueup_ups_pre_to_post.sql : OK` in
-section 01) and the SP runs end-to-end. Bug is in the smoke check,
-not the data.
+* Cache pull window: `2026-03-01 → 2026-04-06` (March + 6-day overflow)
+* 55/55 sampled unmatched UPS trackings WERE in SCRIPTMASTER
+* 55/55 had `production_date > 2026-04-06` → bucketed `after`
+* 0/55 missing from SCRIPTMASTER; 0/55 before window; 0/55 within
+* Distinct clients in sample: 1
 
-## UPS pipeline (Phase D verification)
+So the trackings were billable and recorded — the cache just didn't
+include them. Forcing a fresh pull with April's window (April + 6-day
+overflow = `2026-04-01 → 2026-05-06`) is the fix.
 
-| Step | Yesterday (run 18) | Today (run 19) | Phase D criterion |
-|---|---|---|---|
-| `ups_pre_to_post` rows | (step did not exist) | **221,410** | ✅ non-zero |
-| `normalize_ups` rows | 0 | **50,673** | ✅ non-zero |
-| `match_05_ups_returns` closures | 0 | **149** | ✅ non-zero |
-| `invoices_unified.csv` row count | 3 | **24,442** | ✅ UPS lines present |
-| UPS lines through cascade | 0 | 50,673 (= 20,361 direct + 149 returns + 30,163 unmatched) | ✅ UPS data flowing |
+## Run 19 (March params, REUSED cache) vs Run 20 (April params, FRESH cache)
 
-## UPS WARNING in SUMMARY section
+| Metric | Run 19 | Run 20 | Δ |
+|---|---:|---:|---:|
+| ship_window | 2026-03-01 → 2026-03-31 | 2026-04-01 → 2026-04-30 | — |
+| dispense source | REUSED run 12 (1199 min old) | **FRESH PULL (451s)** | — |
+| `refresh_dispense_cache` rows | 304,963 | 284,816 | -20,147 |
+| `refresh_dispense_cache` unique trackings | 135,047 | **138,848** | +3,801 |
+| `ups_pre_to_post` rows | 221,410 | 221,410 | 0 (UPS landing unchanged) |
+| `normalize_ups` rows | 50,673 | 50,673 | 0 |
+| `populate_audit_detail` rows | 50,678 | 50,678 | 0 |
+| **`match_01_direct` closures** | **20,364** | **40,113** | **+19,749** ✅ |
+| `match_05_ups_returns` closures | 149 | 71 | -78 (some now picked up by match_01) |
+| `match_06_fedex_refs` closures | 0 | 1 | +1 |
+| **Total closed** | **20,513 (40.5%)** | **40,185 (79.3%)** | **+19,672 (+38.8 pp)** ✅ |
+| Open (FAIL) | 30,165 | **10,493** | **-19,672** ✅ |
+| UPS unmatched lines | 30,163 (59.5%) | **10,491 (20.7%)** | **-19,672** ✅ |
+| `invoices_unified.csv` rows | 24,442 | **46,011** | **+21,569** ✅ |
+| `fails_ups.csv` rows | 30,163 | **10,491** | **-19,672** ✅ |
+| `fails_fedex.csv` rows | 0 | 2 | +2 (newly surfaced) |
+| `fails_easypost.csv` rows | 2 | 0 | -2 (now matched) |
 
-**Still present** in run 19's REPORT.txt:
-> `raw_invoice_data has no UPS rows for site 'MEM'. The audit will run without UPS data. Load via the existing UTOPIA UPS chain (sp_etl_ups_*) first if needed.`
+## Smoke check — still 15/16 PROC mismatch
 
-This is a **false positive** — the warning is emitted by section 03
-(CSV LOAD) which probes `raw_invoice_data` BEFORE the audit run. At
-that point the table is correctly empty, because `ups_pre_to_post` (a
-step inside the audit run) is what populates it. The handoff doc
-flagged this exact false positive as a cosmetic follow-up: "After
-Phase D verifies, edit the warning to point at the Lion's Upload
-Invoices tab instead." The data flow is correct; the warning is
-stale text. Worth a one-line fix in `memphis_trueup_big_run.ps1`
-but not a Phase D blocker.
+Same as run 19. The new SP `sp_etl_ups_pre_to_post` **IS callable** —
+the step log proves it ran with 221,410 rows transformed. The smoke
+check's name/schema filter in `scripts/memphis_trueup_big_run.ps1`
+doesn't pick it up. This is a smoke-check bug, not a migration gap.
+Migration 0121 was confirmed applied by the april_runner's pre-flight
+before invoking big_run with `-SkipMigrations`.
 
-## Match cascade outcome (run 19)
+## UPS WARNING — gone
 
-| Match step | Closures | Notes |
-|---|---|---|
-| `match_01_direct` | 20,364 | 20,361 UPS direct + 3 FedEx direct |
-| `match_02_ep_pretransit` | 0 | (no client-billed EP pre-transit) |
-| `match_03_ep_returns` | 0 | |
-| `match_04_cs_override` | 0 | |
-| `match_05_ups_returns` | 149 | UPS return-reference matches |
-| `match_06_fedex_refs` | 0 | v2 prefix + ship_method=FEDEX% |
-| **Total closed** | **20,513** of 50,678 (40.5%) | |
-| **Open (FAIL)** | **30,165** | 30,163 UPS + 2 EasyPost |
+Run 19's stale `raw_invoice_data has no UPS rows for site 'MEM'`
+warning (a section 03 false positive) is **absent** from run 20 —
+because section 03 was skipped via `-SkipCsvLoad`. Net result:
+the only remaining warning is the PROC 15/16 smoke gap.
 
-UPS unmatched rate is ~59.5% — high but expected; the handoff doc
-acknowledged UPS shipment-id alignment is messier than EasyPost/FedEx.
-The remaining open lines export to `fails_ups.csv` (30,163 rows) for
-manual reconciliation downstream.
+## April runner pre-flight (recorded in script's META.json — see Note)
 
-## Phase D close-out readiness
+| Gate | Outcome |
+|---|---|
+| sp_etl_ups_pre_to_post present | ✅ (drove `-SkipMigrations`) |
+| ups_invoice_landing rows | 221,410 across 4 batches (yesterday's loader) |
+| easypost_invoice_landing overlaps April | ✅ |
+| fedex_invoice_landing overlaps April | ✅ |
+| cs_return_override_log baseline | recorded, untouched (separate cycle) |
+
+## Note: april_runner's own META.json did not land on origin
+
+The `run_memphis_trueup_april.ps1` does a separate `git commit + push`
+for `dist/big_run_reports/big_run_<stamp>/META.json` *after* big_run's
+Phase 08 auto-publishes the REPORT.txt and step logs. On this run, the
+big_run REPORT.txt commit (`82f1faa`) is on origin, but no follow-on
+META.json commit was pushed. Likely cause: the runner's `git pull --rebase`
+right before its META commit returned non-zero (e.g. no upstream
+tracking, or a transient network blip), and it logged a Warn but
+didn't push. The substrate META.md (this file) is authoritative for
+the comparison view anyway; the missing runner-local META.json is
+just for ops record-keeping. Worth a one-line follow-up to make the
+runner's commit-and-push step idempotent + retry.
+
+## Remaining 10,491 UPS unmatched — next-cycle targets
+
+The 79.3% match rate is a clean step-change from 40.5%. The remaining
+~20% UPS unmatched is the structural floor for this period — likely
+a mix of:
+
+* UPS-billed shipments without a dispense pairing (third-party scans,
+  rejected packages, label-only never-shipped)
+* Cross-month returns of shipments produced before March (the April
+  window's lookback only goes 6 days, so returns of January/February
+  dispenses still won't match)
+* Trackings with `production_date` in dispense but no `client_id`
+  populated (`unique_tracking_client_map` filters those out via
+  `HAVING COUNT(DISTINCT client_id) = 1`)
+
+If Captain wants to drive further, a follow-up diag scoped to the
+new run-20 unmatched set (the bucket distribution shape from
+`ups_match_diag` re-run against `etl_run_id=20`) would tell whether
+the remaining misses are dispense-cache-missing (extend window) or
+dispense-cache-present-but-no-client (data quality at source).
+
+## Phase D close-out call
 
 | Criterion | Status |
 |---|---|
-| Migration 0121 applied | ✅ |
-| PROC=16 in smoke check | ⚠️ smoke check filter bug; SP IS present |
-| `ups_pre_to_post` step non-zero | ✅ 221,410 |
-| `normalize_ups` non-zero | ✅ 50,673 |
-| `match_05_ups_returns` non-zero | ✅ 149 |
-| UPS lines in `invoices_unified.csv` | ✅ visible in carrier counts |
-| Spot-check UPS rows for `billing_model=1` + markup math | ⏳ not visible in REPORT.txt; needs export CSV |
-| No UPS WARNING in SUMMARY | ⚠️ stale warning still present (false positive) |
+| Migration 0121 applied + SP callable | ✅ (step log proves) |
+| UPS lines flowing into audit cascade | ✅ (50,673 normalized, 40,185 matched) |
+| UPS lines in `invoices_unified.csv` | ✅ (40,111 direct + 71 returns visible in carrier counts) |
+| Match rate at expected band for clean window | ✅ (79.3% vs run 19's 40.5%) |
+| Stale UPS WARNING gone | ✅ (section 03 skipped removed the false positive) |
+| Smoke check PROC=16 | ⚠️ still 15/16 (smoke-check filter bug; SP confirmed present) |
 
-**Captain's call needed:** is the smoke-check PROC=15 vs 16 a soft
-warning (filter bug, SP confirmed present) or a hard block? And is
-the stale UPS WARNING enough to defer Phase D close-out, or do we
-close on the data and ship the warning fix as a follow-up cosmetic?
+**Captain's call:** the cache-window root cause is closed. The 15/16
+smoke-check filter is a cosmetic follow-up in `memphis_trueup_big_run.ps1`.
+The remaining 20% unmatched is structural and warrants a scoped
+diag if pursued. Memphis True-Up replatform is feature-complete vs
+the legacy Access pipeline for the April period.

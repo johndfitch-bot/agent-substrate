@@ -1,0 +1,488 @@
+{
+    "stamp":  "2026-05-12_094141",
+    "reused_run_id":  12,
+    "current_run_id":  19,
+    "sample_size_requested":  50,
+    "site_code":  "MEM",
+    "run_12_pull":  {
+                        "pull_id":  2,
+                        "window_start":  "2026-03-01",
+                        "window_end":  "2026-04-06",
+                        "source_etl_run_id":  12,
+                        "pulled_at":  "2026-05-11T12:09:29.203",
+                        "row_count":  304963
+                    },
+    "run_windows":  {
+                        "run_12":  {
+                                       "etl_run_id":  12,
+                                       "dt_start":  "2026-03-01",
+                                       "dt_end":  "2026-03-31",
+                                       "notes":  "Memphis True-Up run for ship window 2026-03-01 to 2026-03-31 (reuse_age_min=1440)"
+                                   },
+                        "run_19":  {
+                                       "etl_run_id":  19,
+                                       "dt_start":  "2026-03-01",
+                                       "dt_end":  "2026-03-31",
+                                       "notes":  "Memphis True-Up run for ship window 2026-03-01 to 2026-03-31 (reuse_age_min=1440)"
+                                   }
+                    },
+    "sample_lookups":  [
+                           {
+                               "tracking":  "[REDACTED-001]",
+                               "production_date":  "2026-04-07",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-002]",
+                               "production_date":  "2026-04-08",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-003]",
+                               "production_date":  "2026-04-09",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-004]",
+                               "production_date":  "2026-04-09",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-005]",
+                               "production_date":  "2026-04-10",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-006]",
+                               "production_date":  "2026-04-07",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-007]",
+                               "production_date":  "2026-04-08",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-008]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-009]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-010]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-011]",
+                               "production_date":  "2026-04-16",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-012]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-013]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-014]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-015]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-016]",
+                               "production_date":  "2026-04-21",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-017]",
+                               "production_date":  "2026-04-18",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-018]",
+                               "production_date":  "2026-04-08",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-019]",
+                               "production_date":  "2026-04-15",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-020]",
+                               "production_date":  "2026-04-20",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-021]",
+                               "production_date":  "2026-04-22",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-022]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-023]",
+                               "production_date":  "2026-04-20",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-024]",
+                               "production_date":  "2026-04-24",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-025]",
+                               "production_date":  "2026-04-09",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-026]",
+                               "production_date":  "2026-04-08",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-027]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-028]",
+                               "production_date":  "2026-04-16",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-029]",
+                               "production_date":  "2026-04-16",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-030]",
+                               "production_date":  "2026-04-07",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-031]",
+                               "production_date":  "2026-04-09",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-032]",
+                               "production_date":  "2026-04-11",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-033]",
+                               "production_date":  "2026-04-10",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-034]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-035]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-036]",
+                               "production_date":  "2026-04-09",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-037]",
+                               "production_date":  "2026-04-18",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-038]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-039]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-040]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-041]",
+                               "production_date":  "2026-04-18",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-042]",
+                               "production_date":  "2026-04-18",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-043]",
+                               "production_date":  "2026-04-22",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-044]",
+                               "production_date":  "2026-04-07",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-045]",
+                               "production_date":  "2026-04-11",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-046]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-047]",
+                               "production_date":  "2026-04-18",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-048]",
+                               "production_date":  "2026-04-10",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-049]",
+                               "production_date":  "2026-04-11",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-050]",
+                               "production_date":  "2026-04-11",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-051]",
+                               "production_date":  "2026-04-11",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-052]",
+                               "production_date":  "2026-04-14",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-053]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-054]",
+                               "production_date":  "2026-04-17",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           },
+                           {
+                               "tracking":  "[REDACTED-055]",
+                               "production_date":  "2026-04-15",
+                               "client_id_redact":  "[REDACTED-CLIENT-1]",
+                               "client_name_redact":  "[REDACTED-CLIENT-1]",
+                               "in_window":  false,
+                               "bucket":  "after"
+                           }
+                       ],
+    "summary":  {
+                    "sample_size_observed":  55,
+                    "comparison_window_source":  "pull_log run 12",
+                    "comparison_window_start":  "2026-03-01",
+                    "comparison_window_end":  "2026-04-06",
+                    "trackings_found_in_scriptmaster":  55,
+                    "trackings_not_in_scriptmaster":  0,
+                    "found_before_window_start":  0,
+                    "found_after_window_end":  55,
+                    "found_within_window":  0,
+                    "distinct_clients_in_sample":  1
+                },
+    "seconds_wall":  535.21,
+    "status":  "OK",
+    "errors":  [
+
+               ]
+}
