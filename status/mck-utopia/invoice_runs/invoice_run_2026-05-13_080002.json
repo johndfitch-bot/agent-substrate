@@ -1,0 +1,77 @@
+{
+    "stamp":  "2026-05-13_080002",
+    "mode":  "EXPORT_ONLY",
+    "host":  "[REDACTED-HOSTNAME]",
+    "user":  "[REDACTED-USER]",
+    "sql_server":  "\u003csql-server-internal\u003e",
+    "sql_database":  "UTOPIA",
+    "site_code":  "MEM",
+    "window":  {
+                   "start":  "2026-04-01",
+                   "end":  "2026-04-30"
+               },
+    "etl_run_id":  24,
+    "invoice_run_id":  "7E4F9FF8-CA5E-470E-9664-E0B395CAB251",
+    "migration_applied":  false,
+    "preflight_closed_audit_lines":  null,
+    "preflight_orphan_running_runs":  [
+
+                                      ],
+    "sp_seconds":  null,
+    "invoice_output_rows":  50592,
+    "validation_pass":  true,
+    "totals":  {
+                   "total_records":  50592,
+                   "total_carrier_cost":  340697.96,
+                   "total_client_billing":  357732.86,
+                   "total_margin":  17034.90,
+                   "run_status":  "COMPLETE"
+               },
+    "per_client":  [
+                       {
+                           "client_redact":  "[REDACTED-CLIENT-1]",
+                           "row_count":  50454,
+                           "total_carrier":  339195.74,
+                           "total_billing":  356155.53,
+                           "total_margin":  16959.79
+                       },
+                       {
+                           "client_redact":  "[REDACTED-CLIENT-2]",
+                           "row_count":  118,
+                           "total_carrier":  768.47,
+                           "total_billing":  806.89,
+                           "total_margin":  38.42
+                       },
+                       {
+                           "client_redact":  "[REDACTED-CLIENT-3]",
+                           "row_count":  20,
+                           "total_carrier":  733.75,
+                           "total_billing":  770.44,
+                           "total_margin":  36.69
+                       }
+                   ],
+    "per_billing_model":  [
+                              {
+                                  "billing_model_label":  "MARKUP_PCT",
+                                  "row_count":  50592,
+                                  "total_carrier":  340697.96,
+                                  "total_billing":  357732.86,
+                                  "total_margin":  17034.90
+                              }
+                          ],
+    "csv_file":  "\u003cutopia-root\u003e/dist/invoice_runs/invoice_output_2026-05-13_080002.csv",
+    "csv_reconcile":  {
+                          "csv_row_count":  50592,
+                          "csv_bad_field_rows":  0,
+                          "csv_sum_client_rate":  357732.8580,
+                          "db_total_client_billing":  357732.86,
+                          "delta":  -0.0020,
+                          "tolerance":  0.01,
+                          "pass":  true
+                      },
+    "seconds_wall":  63.19,
+    "status":  "OK",
+    "errors":  [
+
+               ]
+}
