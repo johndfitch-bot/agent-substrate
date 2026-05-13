@@ -1,0 +1,58 @@
+{
+    "stamp": "2026-05-12_181054",
+    "host": "[REDACTED-HOSTNAME]",
+    "user": "[REDACTED-USER]",
+    "sql_server": "<sql-server-internal>",
+    "sql_database": "UTOPIA",
+    "site_code": "MEM",
+    "client_name": "[REDACTED]",
+    "client_name_like": "[REDACTED]",
+    "dry_run": true,
+    "input_file": "<utopia-root>/dist/imports/albertsons_zone_rates_2026-05-12.csv",
+    "raw_row_count": 11,
+    "validated_row_count": 11,
+    "anomalies": [],
+    "service_type_translations": {
+        "FedEx Priority": "FEDEX PRIORITY OVERNIGHT",
+        "FedEx Standard": "FEDEX 2DAY"
+    },
+    "range_expansion": {
+        "input_rows": 11,
+        "expanded_rows": 18,
+        "zone_max_cap": 12,
+        "cap_warnings": [
+            {
+                "raw_service": "FedEx Priority",
+                "translated_service": "FEDEX PRIORITY OVERNIGHT",
+                "input_zone_min": 9,
+                "input_zone_max": 99,
+                "actual_max_used": 12,
+                "rate": 44.0
+            }
+        ]
+    },
+    "new_service_types_warning": [],
+    "resolved_client_id_redacted": "[REDACTED-CLIENT-ALBERTSONS]",
+    "resolved_client_name_redacted": "[REDACTED]",
+    "pre_count_active": 18,
+    "merge_plan": {
+        "no_change": 18,
+        "close_and_insert": 0,
+        "insert_new": 0,
+        "orphan_deactivate": 0
+    },
+    "merge_results": {
+        "rows_inserted": 0,
+        "rows_closed_by_rate_change": 0,
+        "rows_deactivated_as_orphan": 0
+    },
+    "post_count_active": 18,
+    "verification": {
+        "delta_active": null,
+        "expected_delta": null,
+        "match": null
+    },
+    "seconds_wall": 4.56,
+    "status": "DRYRUN",
+    "errors": []
+}
