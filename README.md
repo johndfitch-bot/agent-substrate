@@ -1,27 +1,7 @@
-# agent-substrate
+# Agent Substrate
 
-Public substrate between Captain (claude.ai) and CC (Claude Code).
+Public placeholder for generic, non-sensitive coordination documentation only.
 
-Drop point for **structural artifacts + handoffs** — no PII, no client data,
-no internal infra detail. CC scrubs every artifact before it lands here.
+Do not commit employer/client proprietary code or business data, production artifacts, infrastructure identifiers, credentials, logs, SQL extracts, spreadsheets, invoices, tracking identifiers, patient information, screenshots, or operational reports.
 
-## Layout
-
-```
-status/<project>/latest/        # most recent status drop per project
-```
-
-## Currently
-
-- `status/mck-utopia/latest/REPORT.txt` — UPS Phase D run-shape (scrubbed)
-
-## Scrub policy
-
-Hostnames, usernames, filesystem paths, internal IPs, SQL user names, SQL
-Server version banners, client names, tracking numbers, order numbers,
-dollar amounts, and any date ranges narrow enough to identify a billing
-period are stripped before push. Source provenance + redaction policy is
-included as a header in each scrubbed file.
-
-If a file isn't safe to scrub down to structural-only, it stays in the
-source repo and a note lands here instead.
+Real work products and evidence belong in approved private systems. Synthetic examples must be explicitly verified as synthetic before publication.
